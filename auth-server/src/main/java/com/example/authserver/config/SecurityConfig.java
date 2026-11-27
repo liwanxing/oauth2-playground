@@ -59,7 +59,12 @@ public class SecurityConfig {
         http
                 // 只让这条链处理"授权服务器端点"的请求
                 .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-                .with(authorizationServerConfigurer, Customizer.withDefaults())
+                // .oidc(...)：开启 OIDC（OpenID Connect，建立在 OAuth2 之上的身份层）。
+                // 它带来 /.well-known/openid-configuration 发现端点——客户端应用
+                // 只配一个 issuer 地址，就能从这里自动发现授权/发 token 的端点，
+                // 客户端 application.yml 里的 issuer-uri 依赖这个端点才能工作。
+                .with(authorizationServerConfigurer,
+                        configurer -> configurer.oidc(Customizer.withDefaults()))
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 // 未登录时访问授权端点（如 /oauth2/authorize），
                 // 若浏览器请求(HTML)则重定向到 /login 登录页，而不是返回 401 JSON

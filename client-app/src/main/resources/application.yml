@@ -1,0 +1,46 @@
+# Step 4：客户端应用配置。
+#
+# 这里做的正是"去 GitHub 登记应用"那件事——但登记对象换成了我们自己的
+# auth-server：把 ClientConfig.java 里登记的 client-app 的信息在这边填回去。
+# 两边必须严格一致（client_id、secret、回调地址、scope），否则授权流程会报错。
+
+server:
+  # 客户端跑在 8000 端口（授权服务器在 9000，两个是独立应用）
+  port: 8000
+
+spring:
+  security:
+    oauth2:
+      client:
+        # ---- 登记信息：填的就是 auth-server 的 ClientConfig.java 里注册的内容 ----
+        registration:
+          client-app:
+            # 指向下面 provider 段里的哪个授权服务器（本 demo 只有一个）
+            provider: auth-server
+            # 对应 ClientConfig 里的 .clientId("client-app")
+            client-id: client-app
+            # 对应 ClientConfig 里的 .clientSecret("{noop}client-secret")
+            # 注意：客户端这边存的是"真实值"，没有 {noop} 前缀——那是授权服务器
+            # 存储密码时用的编码器标记，两边比对时框架已经各自处理好了
+            client-secret: client-secret
+            # 想申请的权限，对应 ClientConfig 里的 .scope(...)
+            # 同意页上勾选项就是从这两项里来的
+            scope:
+              - profile:read
+              - balance:read
+            # 回调地址：授权完成后 auth-server 把浏览器送回这里，
+            # /login/oauth2/code/client-app 是 Spring 客户端固定处理的路径
+            # （registration 名字必须和这里一致，框架才能对上号）
+            redirect-uri: http://localhost:8000/login/oauth2/code/client-app
+            # 授权方式：授权码
+            authorization-grant-type: authorization_code
+            # 在登录选择页上显示的应用名
+            client-name: client-app（用 auth-server 登录）
+        # ---- 对接的授权服务器是谁 ----
+        provider:
+          auth-server:
+            # 只填 issuer 地址即可：框架启动后会去请求
+            # http://localhost:9000/.well-known/oauth-authorization-server，
+            # 从元数据自动发现 /oauth2/authorize、/oauth2/token 等端点地址。
+            # 这就是前面 SecurityConfig 里 authorizationServerSettings() 的用途。
+            issuer-uri: http://localhost:9000
