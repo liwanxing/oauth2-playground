@@ -7,11 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Step 3：余额接口（mock 数据）——重点演示"验章"之后的第二步"查权限"。
+ * Step 3：余额接口（mock 数据）——重点演示"验签"之后的第二步"查权限"。
  *
- * 验章（token 是真的）和查权限（token 允许干这件事）是两个不同的检查：
+ * 对应 GitHub 案例：拿 GitHub token 调仓库 API，如果当初授权时没勾 repo
+ * 这个权限，GitHub 会拒绝你——token 是真的，但权限不够。
+ * 本接口演示同样的行为：
  * - token 是真的，但里面没有 balance:read 这个 scope -> 依然 403
- * - 这就是 OAuth2 里"最小授权"的意义：client-app 只能拿到你同意给它的那些权限
+ * - 这就是 OAuth2 "最小授权"的意义：client-app 只能拿到你同意给它的那些权限
  *
  * @PreAuthorize(...)：方法执行前的权限检查（需要 ResourceServerConfig 上的
  * @EnableMethodSecurity 才生效）。规则含义：

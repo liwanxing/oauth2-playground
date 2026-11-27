@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Step 3：个人信息接口。
  *
- * 对应授权流程里的 scope：profile:read。
- * client-app 拿着 access token 来调这个接口时，token 已经被资源服务器
- * 过滤链（ResourceServerConfig）验过签了——能进到方法里，说明 token 是真的。
+ * 对应 GitHub 案例：GitHub 有个接口 GET https://api.github.com/user，
+ * 拿着 GitHub 发的 token 去调它，就能拿到当前授权用户的信息。
+ * 本接口就是本地版：client-app 拿着 access token 来调 /api/me，
+ * token 已经被资源服务器过滤链（ResourceServerConfig）验过签了——
+ * 能进到方法里，说明 token 是真的。
  *
  * @AuthenticationPrincipal Jwt jwt：框架把验签后的 token 内容直接注入这个参数。
  * token 是个三段式的 JWT，中间一段（payload）就是一串声明（claims），

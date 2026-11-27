@@ -23,11 +23,14 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
  *
  * 本文件只回答一个问题：一个请求进来，该走哪条处理流程？
  *
- * 整个授权流程分三步（站在 client-app 视角）：
- *   第一步：发起授权 —— client-app 把你的浏览器带到授权服务器（Step 4 的 client-app 触发）
+ * 整个授权流程分三步（站在 client-app 视角，拿「用 GitHub 登录」对照）：
+ *   第一步：发起授权 —— client-app 把你的浏览器带到授权服务器
+ *           （相当于点「用 GitHub 登录」按钮后跳到 github.com）
  *   第二步：登录 + 同意 + 发证 —— 在授权服务器完成：
- *           你输账号密码（登录页）、点"同意授权"（同意页）、拿到一张通行证（token）
- *   第三步：凭证办事 —— client-app 拿通行证来调接口（/api/balance 等）
+ *           你输账号密码（github.com 登录页）、点"同意授权"（GitHub 的
+ *           Authorize 确认页）、拿到一张通行证（token）
+ *   第三步：凭证办事 —— client-app 拿通行证来调接口（/api/balance 等，
+ *           相当于拿 GitHub token 去调 api.github.com）
  *
  * 三条过滤链的分工（按网址分流）：
  *   1. /oauth2/* 端点（第二步里的"同意授权、发 token"）  -> 授权服务器链（本文件 @Order(1)）

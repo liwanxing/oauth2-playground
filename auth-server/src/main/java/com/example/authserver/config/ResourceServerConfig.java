@@ -14,17 +14,18 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Step 3：资源服务器配置——第三步（凭证办事）的"验票窗口"。
+ * Step 3：资源服务器配置——第三步（凭证办事）的验票窗口。
  *
- * 到 Step 2 为止，token 已经能发出来了，但"有人拿 token 来调接口"这条链路还没有。
- * 本文件补上这一环，干两件事：
+ * 对应 GitHub 案例：你拿 GitHub 发的 token 去调 GitHub API（api.github.com）
+ * 时，GitHub 后端会先验证 token 真伪，再看 token 里有没有对应的权限。
+ * GitHub 的 API 就是"资源服务器"，本文件给我们的 /api/** 装上同样的能力：
  *
- * 1. jwtDecoder()：验章工具。client-app 请求头里带的 access token 是一张
- *    盖了章的 JWT（KeyConfig 里那枚 RSA 公章），这里用公布的公钥验证签名，
- *    伪造的 token 验签不过，直接被拒。
+ * 1. jwtDecoder()：验签工具。client-app 请求头里带的 access token 是一张
+ *    盖了章的 JWT（KeyConfig 里那枚 RSA 私钥签的名），这里用公布的公钥验证
+ *    签名，伪造的 token 验签不过，直接被拒。
  * 2. 资源服务器过滤链：凡是 /api/** 的请求，先验 token，没带 token 返回 401。
  *
- * 注意：资源服务器并不重新发 token，它只"消费"token——这就是 JWT 的好处：
+ * 注意：资源服务器不重新发 token，它只"消费"token——这就是 JWT 的好处：
  * 验证在自己本地完成，不需要每次都去问授权服务器。
  *
  * @EnableMethodSecurity：开启方法级权限检查，让 Controller 里能写 @PreAuthorize
@@ -35,7 +36,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ResourceServerConfig {
 
     /**
-     * 验章工具：基于 KeyConfig 里的公钥（jwkSource）构建。
+     * 验签工具：基于 KeyConfig 里的公钥（jwkSource）构建。
      * 资源服务器链会自动发现这个 Bean 并用它验证每个 /api/** 请求的 token。
      */
     @Bean
