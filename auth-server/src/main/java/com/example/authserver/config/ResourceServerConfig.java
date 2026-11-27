@@ -14,7 +14,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Step 3：资源服务器配置——阶段三（凭证办事）的"验票窗口"。
+ * Step 3：资源服务器配置——第三步（凭证办事）的"验票窗口"。
  *
  * 到 Step 2 为止，token 已经能发出来了，但"有人拿 token 来调接口"这条链路还没有。
  * 本文件补上这一环，干两件事：
@@ -44,7 +44,7 @@ public class ResourceServerConfig {
     }
 
     // ------------------------------------------------------------------
-    // 过滤链 2：资源接口 /api/**（阶段三）。
+    // 过滤链 2：资源接口 /api/**（第三步）。
     // 排在授权服务器链（@Order(1)）之后、表单登录链（@Order(3)）之前。
     // ------------------------------------------------------------------
     @Bean
