@@ -1,0 +1,10 @@
+server:
+  # 授权服务器用 9000 端口，和客户端(8000)区分开
+  port: 9000
+
+spring:
+  application:
+    name: auth-server
+
+# Step 2 会在 SecurityConfig 里配置登录用户和客户端注册，
+# 用户名/密码、client-id 等先不写在这里，集中放在安全配置类中便于对照学习。
