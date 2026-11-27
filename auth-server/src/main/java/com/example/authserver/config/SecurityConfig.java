@@ -29,9 +29,9 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
  *   阶段三：凭证办事   —— client-app 拿通行证来调接口（/api/balance 等）
  *
  * 两条过滤链的分工（按网址分流，不是"正常登录 vs 授权登录"）：
- *   1. /oauth2/* 端点（阶段一+二：授权页、发 token、jwks）-> 授权服务器链
- *   2. /api/**   资源接口（阶段三：验 token、给数据）      -> 资源服务器链（Step 3 加）
- *   3. 其余（登录页 /login 本身）                          -> 表单登录链
+ *   1. /oauth2/* 端点（阶段一+二：授权页、发 token、jwks）-> 授权服务器链（本文件 @Order(1)）
+ *   2. /api/**   资源接口（阶段三：验 token、给数据）      -> 资源服务器链（ResourceServerConfig.java @Order(2)）
+ *   3. 其余（登录页 /login 本身）                          -> 表单登录链（本文件 @Order(3)）
  *
  * 注意：过滤链 2 和授权流程没有必然关系——你自己直接开浏览器访问
  * http://localhost:9000/login 也能登录，这是"网站自己能登录"的普通能力；
@@ -66,14 +66,14 @@ public class SecurityConfig {
     }
 
     // ------------------------------------------------------------------
-    // 过滤链 2：其余所有请求（目前就是登录页 /login 本身）。
+    // 过滤链 3：其余所有请求（目前就是登录页 /login 本身）。
     // 它接待的是浏览器、管的是"网站自己能登录"这件事；
     // 授权流程里用户输账号密码的页面就是它提供的。
-    // 阶段三（client-app 拿 token 来调 /api/**）会在 Step 3
-    // 插入一条独立的"资源服务器链"来接待，不在本链管辖内。
+    // 阶段三（client-app 拿 token 来调 /api/**）已由 ResourceServerConfig
+    // 的资源服务器链（@Order(2)）接管，不会落到本链。
     // ------------------------------------------------------------------
     @Bean
-    @Order(2)
+    @Order(3)
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
