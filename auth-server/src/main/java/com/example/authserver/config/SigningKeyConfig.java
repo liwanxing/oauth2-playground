@@ -16,7 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * 密钥配置：给 access token 防伪的"公章"。
+ * 签名密钥配置：给 access token 防伪的"公章"。
+ *
+ * 注意：本文件不负责"生成 token"——token 的生成发生在 /oauth2/token 端点，
+ * 由授权服务器框架完成；这里只提供生成/验证环节都要用的 RSA 密钥对。
  *
  * 对应 GitHub 案例：GitHub 发的 token 别人伪造不了，是因为 GitHub 用只有
  * 它自己有的私钥给 token 签名；你的网站验证 token 真伪时用的是 GitHub
@@ -29,7 +32,7 @@ import org.springframework.context.annotation.Configuration;
  * demo 每次重启生成新密钥（旧 token 全部失效），生产环境应持久化密钥。
  */
 @Configuration
-public class KeyConfig {
+public class SigningKeyConfig {
 
     @Bean
     JWKSource<SecurityContext> jwkSource() {

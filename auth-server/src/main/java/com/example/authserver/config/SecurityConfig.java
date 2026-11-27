@@ -17,9 +17,9 @@ import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
  * Step 2：授权服务器的"服务窗口"分流配置。
  *
  * 账号、客户端注册、RSA 密钥已拆到旁边的三个文件：
- * - UserConfig.java    账号数据库（登录认谁：user / password123）
- * - ClientConfig.java  合作网站名单（谁有资格发起授权：client-app）
- * - KeyConfig.java     公章（access token 的防伪签名）
+ * - UserAccountConfig.java   账号来源（登录认谁：user / password123，将来接数据库 DAO）
+ * - ClientConfig.java        客户端注册（谁有资格发起授权：client-app）
+ * - SigningKeyConfig.java    签名密钥（access token 的防伪签名）
  *
  * 本文件只回答一个问题：一个请求进来，该走哪条处理流程？
  *

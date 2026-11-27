@@ -10,15 +10,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 /**
- * 账号配置：登录页上输的账号密码认谁。
+ * 账号来源配置：登录页上输的账号密码认谁。
  *
  * 对应 GitHub 案例：点「用 GitHub 登录」后跳到 github.com 的登录页，
  * 你在那里输的是你的 GitHub 账号密码——先证明"你是这个账号的主人"。
  * 本文件里的 user / password123 扮演的就是这个 GitHub 账号。
- * 真实项目这里查数据库，demo 写死一个账号。
+ *
+ * 注意：这里提供的是"账号从哪来"，还不到 DAO 那一层——
+ * InMemoryUserDetailsManager 是个内存版的账号存储；
+ * 真实项目会在这个位置注入一个查数据库的 DAO/Service。
  */
 @Configuration
-public class UserConfig {
+public class UserAccountConfig {
 
     /** demo 用的密码编码器；{noop} 前缀表示明文存储，生产环境绝不允许 */
     @Bean

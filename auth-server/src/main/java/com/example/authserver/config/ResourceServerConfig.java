@@ -21,7 +21,7 @@ import org.springframework.security.web.SecurityFilterChain;
  * GitHub 的 API 就是"资源服务器"，本文件给我们的 /api/** 装上同样的能力：
  *
  * 1. jwtDecoder()：验签工具。client-app 请求头里带的 access token 是一张
- *    盖了章的 JWT（KeyConfig 里那枚 RSA 私钥签的名），这里用公布的公钥验证
+ *    盖了章的 JWT（SigningKeyConfig 里那枚 RSA 私钥签的名），这里用公布的公钥验证
  *    签名，伪造的 token 验签不过，直接被拒。
  * 2. 资源服务器过滤链：凡是 /api/** 的请求，先验 token，没带 token 返回 401。
  *
@@ -36,7 +36,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ResourceServerConfig {
 
     /**
-     * 验签工具：基于 KeyConfig 里的公钥（jwkSource）构建。
+     * 验签工具：基于 SigningKeyConfig 里的公钥（jwkSource）构建。
      * 资源服务器链会自动发现这个 Bean 并用它验证每个 /api/** 请求的 token。
      */
     @Bean
